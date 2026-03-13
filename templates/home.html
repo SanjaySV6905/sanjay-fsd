@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Sharing Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">🍳 Recipe Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add">Add Recipe</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center text-white">
+        <h1>Welcome to Recipe Sharing Platform</h1>
+        <p>Discover and share amazing recipes</p>
+        <a href="/add" class="btn btn-light btn-lg">Add Your Recipe</a>
+    </header>
+
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Our Recipes</h2>
+        
+        <div class="search-box mb-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search recipes by name, ingredients, or instructions...">
+        </div>
+        
+        {% if recipes %}
+        <div class="row g-4">
+            {% for recipe in recipes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.name }}</h5>
+                        <p class="card-text"><strong>⏱️ Time:</strong> {{ recipe.time }}</p>
+                        <p class="card-text"><strong>🥘 Ingredients:</strong> {{ recipe.ingredients }}</p>
+                        <p class="card-text"><strong>📝 Instructions:</strong> {{ recipe.instructions }}</p>
+                        
+                        <hr>
+                        
+                        <p class="card-text"><strong>⭐ Rating:</strong> 
+                            {% if recipe.average_rating > 0 %}
+                                {{ recipe.average_rating }}/10 ({{ recipe.ratings|length }} ratings)
+                            {% else %}
+                                No ratings yet
+                            {% endif %}
+                        </p>
+                        
+                        <form method="POST" action="/rate/{{ loop.index0 }}" class="rating-form" data-recipe-id="{{ loop.index0 }}">
+                            <label class="form-label"><strong>Rate this recipe:</strong></label>
+                            <div class="star-rating">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                                <span class="star" data-value="6">★</span>
+                                <span class="star" data-value="7">★</span>
+                                <span class="star" data-value="8">★</span>
+                                <span class="star" data-value="9">★</span>
+                                <span class="star" data-value="10">★</span>
+                            </div>
+                            <input type="hidden" name="rating" class="rating-value" required>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-muted">No recipes yet. Be the first to add one!</p>
+        {% endif %}
+        
+        <p id="noResults" class="text-center text-muted" style="display: none;">No recipes found matching your search.</p>
+    </section>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2024 Recipe Sharing Platform. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

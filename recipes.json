@@ -1,0 +1,34 @@
+[
+  {
+    "name": "maggie",
+    "ingredients": "maggie annd water",
+    "instructions": "add maggie and mix water and eat",
+    "time": "2",
+    "ratings": [
+      6,
+      7,
+      8,
+      6,
+      9
+    ],
+    "average_rating": 7.2
+  },
+  {
+    "name": "briyani",
+    "ingredients": "briyani chicken ",
+    "instructions": "mic and eayt",
+    "time": "20",
+    "ratings": [
+      2,
+      8,
+      10,
+      10,
+      10,
+      10,
+      10,
+      10,
+      5
+    ],
+    "average_rating": 8.3
+  }
+]
