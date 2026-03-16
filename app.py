@@ -1,35 +1,32 @@
 from flask import Flask, render_template, request, redirect, url_for
-import json
-import os
+import json, os
 
 app = Flask(__name__)
 
-# File to store recipes
-RECIPES_FILE = 'recipes.json'
-
+# Load recipes from file
 def load_recipes():
-    if os.path.exists(RECIPES_FILE):
-        with open(RECIPES_FILE, 'r') as f:
-            return json.load(f)
+    if os.path.exists('recipes.json'):
+        return json.load(open('recipes.json'))
     return []
 
+# Save recipes to file
 def save_recipes(recipes):
-    with open(RECIPES_FILE, 'w') as f:
-        json.dump(recipes, f, indent=2)
+    json.dump(recipes, open('recipes.json', 'w'), indent=2)
 
+# Home page - show all recipes
 @app.route('/')
 def home():
-    recipes = load_recipes()
-    return render_template('home.html', recipes=recipes)
+    return render_template('home.html', recipes=load_recipes())
 
+# Add recipe page
 @app.route('/add', methods=['GET', 'POST'])
 def add_recipe():
     if request.method == 'POST':
         recipe = {
             'name': request.form['name'],
+            'time': request.form['time'],
             'ingredients': request.form['ingredients'],
             'instructions': request.form['instructions'],
-            'time': request.form['time'],
             'ratings': [],
             'average_rating': 0
         }
@@ -39,19 +36,13 @@ def add_recipe():
         return redirect(url_for('home'))
     return render_template('add_recipe.html')
 
-@app.route('/rate/<int:recipe_id>', methods=['POST'])
-def rate_recipe(recipe_id):
-    rating = int(request.form['rating'])
+# Rate a recipe
+@app.route('/rate/<int:id>', methods=['POST'])
+def rate_recipe(id):
     recipes = load_recipes()
-    
-    if 0 <= recipe_id < len(recipes):
-        if 'ratings' not in recipes[recipe_id]:
-            recipes[recipe_id]['ratings'] = []
-        
-        recipes[recipe_id]['ratings'].append(rating)
-        recipes[recipe_id]['average_rating'] = round(sum(recipes[recipe_id]['ratings']) / len(recipes[recipe_id]['ratings']), 1)
-        save_recipes(recipes)
-    
+    recipes[id]['ratings'].append(int(request.form['rating']))
+    recipes[id]['average_rating'] = round(sum(recipes[id]['ratings']) / len(recipes[id]['ratings']), 1)
+    save_recipes(recipes)
     return redirect(url_for('home'))
 
 if __name__ == '__main__':

@@ -27,8 +27,28 @@
       10,
       10,
       10,
-      5
+      5,
+      9
     ],
-    "average_rating": 8.3
+    "average_rating": 8.4
+  },
+  {
+    "name": "fried rice",
+    "ingredients": "rice and masala",
+    "instructions": "add rice and masala",
+    "time": "5",
+    "ratings": [
+      6,
+      2
+    ],
+    "average_rating": 4.0
+  },
+  {
+    "name": "cake",
+    "time": "2 hrs",
+    "ingredients": "cream fridge water chocolate ",
+    "instructions": "mix and make  cake",
+    "ratings": [],
+    "average_rating": 0
   }
 ]

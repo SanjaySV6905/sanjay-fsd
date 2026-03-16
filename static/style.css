@@ -1,107 +1,37 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+/* Hero banner at top of home page */
 .hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea, #764ba2);
     padding: 80px 20px;
 }
 
-.hero-section h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
-.hero-section p {
-    font-size: 1.3rem;
-    margin-bottom: 30px;
-}
-
+/* Recipe card hover effect */
 .card {
-    transition: transform 0.3s ease;
     border-radius: 10px;
+    transition: transform 0.3s ease;
 }
+.card:hover { transform: translateY(-5px); }
+.card-title { color: #667eea; font-weight: bold; }
 
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card-title {
-    color: #667eea;
-    font-weight: bold;
-}
-
-footer {
-    margin-top: auto;
-}
-
-.form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-}
-
-.btn-primary {
-    background-color: #667eea;
-    border-color: #667eea;
-}
-
-.btn-primary:hover {
-    background-color: #5568d3;
-    border-color: #5568d3;
-}
-
-.search-box {
+/* Search input styling */
+#searchInput {
     max-width: 600px;
     margin: 0 auto;
-}
-
-#searchInput {
+    display: block;
     padding: 12px 20px;
-    font-size: 1.1rem;
     border-radius: 25px;
     border: 2px solid #667eea;
+    font-size: 1.1rem;
 }
 
-#searchInput:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.25);
-}
+/* Star rating */
+.star { font-size: 28px; color: #ddd; cursor: pointer; transition: 0.2s; }
+.star:hover, .star.hover, .star.selected { color: #ffd700; }
 
-.rating-form {
-    margin-top: 15px;
-}
-
-.card hr {
-    margin: 15px 0;
-    border-top: 1px solid #e0e0e0;
-}
-
-.star-rating {
-    display: flex;
-    gap: 5px;
-    margin-top: 10px;
-}
-
-.star {
-    font-size: 30px;
-    color: #ddd;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-}
-
-.star:hover {
-    color: #ffd700;
-    transform: scale(1.2);
-}
-
-.star.selected {
-    color: #ffd700;
-}
-
-.star.hover {
-    color: #ffd700;
-}
+footer { margin-top: auto; }
