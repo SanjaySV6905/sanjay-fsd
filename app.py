@@ -1,48 +1,54 @@
 from flask import Flask, render_template, request, redirect, url_for
-import json, os
+import mysql.connector
 
 app = Flask(__name__)
 
-# Load recipes from file
-def load_recipes():
-    if os.path.exists('recipes.json'):
-        return json.load(open('recipes.json'))
-    return []
+# --- MySQL Connection ---
+db = mysql.connector.connect(
+    host="127.0.0.1",
+    user="root",
+    password="Sanjay@6905",
+    database="recipe_db"
+)
+cursor = db.cursor(dictionary=True)
 
-# Save recipes to file
-def save_recipes(recipes):
-    json.dump(recipes, open('recipes.json', 'w'), indent=2)
-
-# Home page - show all recipes
+# --- Home page - show all recipes ---
 @app.route('/')
 def home():
-    return render_template('home.html', recipes=load_recipes())
+    cursor.execute("SELECT * FROM recipes")
+    recipes = cursor.fetchall()
+    return render_template('home.html', recipes=recipes)
 
-# Add recipe page
+# --- Add recipe page ---
 @app.route('/add', methods=['GET', 'POST'])
 def add_recipe():
     if request.method == 'POST':
-        recipe = {
-            'name': request.form['name'],
-            'time': request.form['time'],
-            'ingredients': request.form['ingredients'],
-            'instructions': request.form['instructions'],
-            'ratings': [],
-            'average_rating': 0
-        }
-        recipes = load_recipes()
-        recipes.append(recipe)
-        save_recipes(recipes)
+        cursor.execute(
+            "INSERT INTO recipes (name, time, ingredients, instructions) VALUES (%s, %s, %s, %s)",
+            (request.form['name'], request.form['time'], request.form['ingredients'], request.form['instructions'])
+        )
+        db.commit()
         return redirect(url_for('home'))
     return render_template('add_recipe.html')
 
-# Rate a recipe
+# --- Rate a recipe ---
 @app.route('/rate/<int:id>', methods=['POST'])
 def rate_recipe(id):
-    recipes = load_recipes()
-    recipes[id]['ratings'].append(int(request.form['rating']))
-    recipes[id]['average_rating'] = round(sum(recipes[id]['ratings']) / len(recipes[id]['ratings']), 1)
-    save_recipes(recipes)
+    rating = int(request.form['rating'])
+
+    # Insert the new rating
+    cursor.execute("INSERT INTO ratings (recipe_id, rating) VALUES (%s, %s)", (id, rating))
+    db.commit()
+
+    # Calculate new average
+    cursor.execute("SELECT AVG(rating) as avg FROM ratings WHERE recipe_id = %s", (id,))
+    result = cursor.fetchone()
+    avg = round(result['avg'], 1)
+
+    # Update average in recipes table
+    cursor.execute("UPDATE recipes SET average_rating = %s WHERE id = %s", (avg, id))
+    db.commit()
+
     return redirect(url_for('home'))
 
 if __name__ == '__main__':

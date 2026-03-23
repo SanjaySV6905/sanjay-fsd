@@ -54,7 +54,7 @@
                         {% endif %}
                     </p>
                     <!-- Star rating form -->
-                    <form method="POST" action="/rate/{{ loop.index0 }}">
+                    <form method="POST" action="/rate/{{ recipe.id }}">
                         <label><strong>Rate this recipe:</strong></label>
                         <div class="star-rating">
                             {% for i in range(1, 11) %}
