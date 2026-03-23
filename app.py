@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 
 app = Flask(__name__)
+app.secret_key = "recipe123"  # needed to use session
 
 # --- MySQL Connection ---
 db = mysql.connector.connect(
@@ -15,9 +16,16 @@ cursor = db.cursor(dictionary=True)
 # --- Home page - show all recipes ---
 @app.route('/')
 def home():
-    cursor.execute("SELECT * FROM recipes")
+    cursor.execute("""
+        SELECT recipes.*, COUNT(ratings.id) as vote_count
+        FROM recipes
+        LEFT JOIN ratings ON recipes.id = ratings.recipe_id
+        GROUP BY recipes.id
+    """)
     recipes = cursor.fetchall()
-    return render_template('home.html', recipes=recipes)
+    # pass list of already-rated recipe ids from session
+    rated = session.get('rated', [])
+    return render_template('home.html', recipes=recipes, rated=rated)
 
 # --- Add recipe page ---
 @app.route('/add', methods=['GET', 'POST'])
@@ -34,6 +42,11 @@ def add_recipe():
 # --- Rate a recipe ---
 @app.route('/rate/<int:id>', methods=['POST'])
 def rate_recipe(id):
+    # Check if user already rated this recipe
+    rated = session.get('rated', [])
+    if id in rated:
+        return redirect(url_for('home'))
+
     rating = int(request.form['rating'])
 
     # Insert the new rating
@@ -48,6 +61,10 @@ def rate_recipe(id):
     # Update average in recipes table
     cursor.execute("UPDATE recipes SET average_rating = %s WHERE id = %s", (avg, id))
     db.commit()
+
+    # Save this recipe id in session so user can't rate again
+    rated.append(id)
+    session['rated'] = rated
 
     return redirect(url_for('home'))
 

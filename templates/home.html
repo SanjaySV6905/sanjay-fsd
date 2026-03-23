@@ -48,12 +48,15 @@
                     <!-- Show average rating -->
                     <p>⭐ <strong>Rating:</strong>
                         {% if recipe.average_rating > 0 %}
-                            {{ recipe.average_rating }}/10 ({{ recipe.ratings|length }} votes)
+                            {{ recipe.average_rating }}/10 ({{ recipe.vote_count }} votes)
                         {% else %}
                             No ratings yet
                         {% endif %}
                     </p>
-                    <!-- Star rating form -->
+                    <!-- Star rating form - disabled if already rated -->
+                    {% if recipe.id in rated %}
+                    <p class="text-success"><strong>You have already rated this recipe.</strong></p>
+                    {% else %}
                     <form method="POST" action="/rate/{{ recipe.id }}">
                         <label><strong>Rate this recipe:</strong></label>
                         <div class="star-rating">
@@ -63,6 +66,7 @@
                         </div>
                         <input type="hidden" name="rating" class="rating-value">
                     </form>
+                    {% endif %}
                 </div>
             </div>
         </div>
