@@ -39,11 +39,11 @@
         {% for recipe in recipes %}
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
-                <div class="card-body">
+                <div class="card-body text-center">
                     <h5 class="card-title">{{ recipe.name }}</h5>
                     <p>⏱️ <strong>Time:</strong> {{ recipe.time }}</p>
-                    <p>🥘 <strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-                    <p>📝 <strong>Instructions:</strong> {{ recipe.instructions }}</p>
+                    <p><strong>🥘 Ingredients:</strong><br><span class="text-start d-block">{{ recipe.ingredients }}</span></p>
+                    <p><strong>📝 Instructions:</strong><br><span class="text-start d-block">{{ recipe.instructions }}</span></p>
                     <hr>
                     <!-- Show average rating -->
                     <p>⭐ <strong>Rating:</strong>

@@ -35,3 +35,6 @@ body {
 .star:hover, .star.hover, .star.selected { color: #ffd700; }
 
 footer { margin-top: auto; }
+
+/* Makes ingredients and instructions display line by line */
+.card p { white-space: pre-line; }
